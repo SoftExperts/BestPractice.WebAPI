@@ -8,6 +8,9 @@ namespace WebAPI.EFCore.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
+        /// <summary>
+        /// This Method is used to temporary storing data in WebAPI.
+        /// </summary>
         public static List<Category> listOfCategories = new List<Category>
         {
             new Category{Id = 1, Name = "LG", CategoryOrder = 2},
