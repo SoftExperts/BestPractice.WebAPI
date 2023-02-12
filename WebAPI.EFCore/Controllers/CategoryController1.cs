@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebAPI.EFCore.Data;
 using WebAPI.EFCore.Model;
 
@@ -24,37 +25,38 @@ namespace WebAPI.EFCore.Controllers
         {
             _context = context;
         }
-
         [HttpGet]
-        public IActionResult Get()
+        //// Task<> task of type is a some return values.
+        ///  Task is a no return values.
+        public async Task<IActionResult> Get()        
         {
             // Not Found
             //return NotFound();
             //return BadRequest();
-            return Ok(_context.categories);
+            return Ok(await _context.categories.ToListAsync());
         }
 
         // GET api/<CategoryController1>/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return Ok(_context.categories.FirstOrDefault(x=>x.Id==id));
+            return Ok(await _context.categories.FirstOrDefaultAsync(x=>x.Id==id));
         }
 
         // POST api/<CategoryController1>
         [HttpPost]
-        public IActionResult Post([FromBody] Category category)
+        public async Task<IActionResult> Post([FromBody] Category category)
         {
-            _context.categories.Add(category);
-            _context.SaveChanges();
+            await _context.categories.AddAsync(category);
+            await _context.SaveChangesAsync();
             return StatusCode(StatusCodes.Status201Created);
         }
 
         // PUT api/<CategoryController1>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Category category)
+        public async Task<IActionResult> Put(int id, [FromBody] Category category)
         {
-            var CategoryFromDb = _context.categories.FirstOrDefault(x => x.Id == id);
+            var CategoryFromDb = await _context.categories.FirstOrDefaultAsync(x => x.Id == id);
             // Using for Exaception Handling
             if (CategoryFromDb == null)
             {
@@ -65,16 +67,16 @@ namespace WebAPI.EFCore.Controllers
                 CategoryFromDb.Name = category.Name;
                 CategoryFromDb.CategoryOrder = category.CategoryOrder;
                 _context.categories.Update(CategoryFromDb);
-                _context.SaveChanges(); 
+                await _context.SaveChangesAsync(); 
                 return Ok("Category Updated..!");
             }
         }
 
         // DELETE api/<CategoryController1>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var CategoryFromDb = _context.categories.Find(id);
+            var CategoryFromDb = await _context.categories.FindAsync(id);
             // Using for Exaception Handling
             if (CategoryFromDb == null)
             {
@@ -83,7 +85,7 @@ namespace WebAPI.EFCore.Controllers
             else
             {
                 _context.categories.Remove(CategoryFromDb);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return Ok("Category Deleted..!");
             }
         }
