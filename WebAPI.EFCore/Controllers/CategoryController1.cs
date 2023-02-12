@@ -55,11 +55,19 @@ namespace WebAPI.EFCore.Controllers
         public IActionResult Put(int id, [FromBody] Category category)
         {
             var CategoryFromDb = _context.categories.FirstOrDefault(x => x.Id == id);
-            CategoryFromDb.Name = category.Name;
-            CategoryFromDb.CategoryOrder = category.CategoryOrder;
-            _context.categories.Update(CategoryFromDb);
-            _context.SaveChanges(); 
-            return Ok("Category Updated..!");
+            // Using for Exaception Handling
+            if (CategoryFromDb == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                CategoryFromDb.Name = category.Name;
+                CategoryFromDb.CategoryOrder = category.CategoryOrder;
+                _context.categories.Update(CategoryFromDb);
+                _context.SaveChanges(); 
+                return Ok("Category Updated..!");
+            }
         }
 
         // DELETE api/<CategoryController1>/5
@@ -67,9 +75,17 @@ namespace WebAPI.EFCore.Controllers
         public IActionResult Delete(int id)
         {
             var CategoryFromDb = _context.categories.Find(id);
-            _context.categories.Remove(CategoryFromDb);
-            _context.SaveChanges();
-            return Ok("Category Deleted..!");
+            // Using for Exaception Handling
+            if (CategoryFromDb == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _context.categories.Remove(CategoryFromDb);
+                _context.SaveChanges();
+                return Ok("Category Deleted..!");
+            }
         }
     }
 }
