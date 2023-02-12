@@ -45,6 +45,8 @@ namespace WebAPI.EFCore.Controllers
         public void Put(int id, [FromBody] Category category)
         {
             var CategoryFromDb = _context.categories.Find(id);
+            CategoryFromDb.Name = category.Name;
+            CategoryFromDb.CategoryOrder = category.CategoryOrder;
             _context.categories.Update(CategoryFromDb);
             _context.SaveChanges(); 
         }
