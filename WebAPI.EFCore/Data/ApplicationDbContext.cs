@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using WebAPI.EFCore.Model;
 
 namespace WebAPI.EFCore.Data
@@ -14,5 +15,22 @@ namespace WebAPI.EFCore.Data
 
         }
         public DbSet<Category> categories { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Category>().HasData(
+                new Category
+                {
+                    Id = 1,
+                    Name = "HTC",
+                    CategoryOrder = 3
+                },
+                new Category
+                {
+                    Id = 2,
+                    Name = "LG",
+                    CategoryOrder = 4
+                }
+                );
+        }
     }
 }
